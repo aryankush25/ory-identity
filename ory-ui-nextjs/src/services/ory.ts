@@ -1,9 +1,18 @@
 import { Configuration, FrontendApi, Identity } from "@ory/client";
 
-export const basePath =
+export const basePathBrowser =
   process.env.NEXT_PUBLIC_KRATOS_BROWSER_URL || "http://127.0.0.1:4433/";
+export const basePath =
+  process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL || "http://kratos:4433/";
 
-console.log("basePath", basePath);
+export const oryBrowser = new FrontendApi(
+  new Configuration({
+    basePath: basePathBrowser,
+    baseOptions: {
+      withCredentials: true,
+    },
+  })
+);
 
 export const ory = new FrontendApi(
   new Configuration({

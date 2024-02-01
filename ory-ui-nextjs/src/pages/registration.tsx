@@ -1,6 +1,11 @@
 import { GetServerSideProps } from "next";
 import { useCallback } from "react";
-import { basePath, getUrlForFlow, isQuerySet, ory } from "@/services/ory";
+import {
+  basePathBrowser,
+  getUrlForFlow,
+  isQuerySet,
+  ory,
+} from "@/services/ory";
 import { UiNode, UiNodeInputAttributes } from "@ory/client";
 import {
   filterNodesByGroups,
@@ -72,7 +77,7 @@ export const getServerSideProps: GetServerSideProps<RegistrationProps> =
     const flow = query?.flow as string | undefined;
 
     if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePath, "registration");
+      const initFlowUrl = getUrlForFlow(basePathBrowser, "registration");
 
       return {
         redirect: {

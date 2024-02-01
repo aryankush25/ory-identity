@@ -5,7 +5,7 @@ import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Session } from "@ory/client";
-import { getUserName, ory } from "@/services/ory";
+import { getUserName, oryBrowser } from "@/services/ory";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,13 +15,13 @@ export default function Home() {
   const [logoutUrl, setLogoutUrl] = useState<string | undefined>();
 
   useEffect(() => {
-    ory
+    oryBrowser
       .toSession()
       .then(({ data }) => {
         // User has a session!
         setSession(data);
         // Create a logout url
-        ory.createBrowserLogoutFlow().then(({ data }) => {
+        oryBrowser.createBrowserLogoutFlow().then(({ data }) => {
           setLogoutUrl(data.logout_url);
         });
       })
