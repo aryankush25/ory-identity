@@ -64,6 +64,7 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NEXT_PUBLIC_KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+      - NEXT_PUBLIC_KRATOS_PUBLIC_URL=http://kratos:4433/
     ports:
       - "3000:3000"
     networks:
