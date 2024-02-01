@@ -61,6 +61,13 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - intranet
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - intranet
 networks:
   intranet:
 volumes:
