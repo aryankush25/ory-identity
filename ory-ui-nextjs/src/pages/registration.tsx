@@ -94,6 +94,8 @@ export const getServerSideProps: GetServerSideProps<RegistrationProps> =
         },
       };
     } catch (error) {
+      console.log("#### error", error);
+
       return {
         redirect: {
           destination: "/registration",
