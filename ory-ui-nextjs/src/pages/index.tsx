@@ -26,7 +26,6 @@ export default function Home() {
         });
       })
       .catch(() => {
-        // Redirect to login page
         return router.push("/registration");
       });
   }, [router]);
