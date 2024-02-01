@@ -56,18 +56,18 @@ services:
       - 8080:8080
     networks:
       - intranet
-  kratos-selfservice-ui-node:
-    image: oryd/kratos-selfservice-ui-node:v0.13.0
-    ports:
-      - "4455:4455"
-    environment:
-      - PORT=4455
-      - SECURITY_MODE=
-      - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
-      - KRATOS_PUBLIC_URL=http://kratos:4433/
-    networks:
-      - intranet
-    restart: on-failure
+  # kratos-selfservice-ui-node:
+  #   image: oryd/kratos-selfservice-ui-node:v0.13.0
+  #   ports:
+  #     - "4455:4455"
+  #   environment:
+  #     - PORT=4455
+  #     - SECURITY_MODE=
+  #     - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+  #     - KRATOS_PUBLIC_URL=http://kratos:4433/
+  #   networks:
+  #     - intranet
+  #   restart: on-failure
 networks:
   intranet:
 volumes:
