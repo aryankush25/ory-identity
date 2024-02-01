@@ -1,6 +1,7 @@
 import { Configuration, FrontendApi, Identity } from "@ory/client";
 
-export const basePath = process.env.NEXT_PUBLIC_KRATOS_BROWSER_URL;
+export const basePath =
+  process.env.NEXT_PUBLIC_KRATOS_BROWSER_URL || "http://127.0.0.1:4433/";
 
 console.log("basePath", basePath);
 
