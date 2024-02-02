@@ -23,16 +23,10 @@ interface VerificationProps {
 }
 
 const Verification = ({ flow }: VerificationProps) => {
-  console.log("#### flow", flow);
-
   const mapUINode = useCallback((node: UiNode, key: number) => {
-    console.log("#### node", node);
-
     if (isUiNodeInputAttributes(node.attributes)) {
       const attrs = node.attributes as UiNodeInputAttributes;
       const nodeType = attrs.type;
-
-      console.log("#### nodeType", nodeType);
 
       switch (nodeType) {
         case "button":
@@ -73,7 +67,6 @@ const Verification = ({ flow }: VerificationProps) => {
 
     if (isUiNodeAnchorAttributes(node.attributes)) {
       const attrs = node.attributes as UiNodeAnchorAttributes;
-      console.log("#### attrs", attrs);
 
       return (
         <a
@@ -97,13 +90,16 @@ const Verification = ({ flow }: VerificationProps) => {
     [flow.ui.nodes]
   );
 
-  console.log("#### nodes", nodes);
-
   return (
     <div className="flex justify-center items-center h-screen dark:bg-gray-900">
       <div className="w-full max-w-md">
         <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800"
+          className={
+            "bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800" +
+            (flow.state === "passed_challenge"
+              ? " flex items-center flex-col"
+              : "")
+          }
           action={flow.ui.action}
           method={flow.ui.method}
         >
