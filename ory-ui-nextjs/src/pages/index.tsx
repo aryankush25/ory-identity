@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import { Session } from "@ory/client";
-import { getUserName, ory } from "@/services/ory";
+import { getUserName, ory, oryBrowser } from "@/services/ory";
 
 interface HomeProps {
   session: Session;
@@ -15,9 +15,9 @@ export default function Home({ session }: HomeProps) {
   const [logoutUrl, setLogoutUrl] = useState<string | undefined>();
 
   useEffect(() => {
-    // oryBrowser.createBrowserLogoutFlow().then(({ data }) => {
-    //   setLogoutUrl(data.logout_url);
-    // });
+    oryBrowser.createBrowserLogoutFlow().then(({ data }) => {
+      setLogoutUrl(data.logout_url);
+    });
   }, []);
 
   return (
