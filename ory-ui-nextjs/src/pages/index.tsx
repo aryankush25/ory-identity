@@ -15,6 +15,7 @@ export default function Home() {
   const [logoutUrl, setLogoutUrl] = useState<string | undefined>();
 
   useEffect(() => {
+    // TODO: Move to server side
     oryBrowser
       .toSession()
       .then(({ data }) => {
