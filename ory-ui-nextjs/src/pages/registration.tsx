@@ -17,6 +17,8 @@ interface RegistrationProps {
 }
 
 const Registration = ({ flow }: RegistrationProps) => {
+  console.log("#### flow", flow);
+
   const mapUINode = useCallback((node: UiNode, key: number) => {
     if (isUiNodeInputAttributes(node.attributes)) {
       const attrs = node.attributes as UiNodeInputAttributes;
@@ -75,6 +77,9 @@ const Registration = ({ flow }: RegistrationProps) => {
           action={flow.ui.action}
           method={flow.ui.method}
         >
+          <h1 className="mb-4 text-sm dark:text-white">
+            {flow.ui.messages?.[0]?.text}
+          </h1>
           {nodes.map((node, idx) => (
             <div key={idx} className="mb-4">
               {mapUINode(node, idx)}
