@@ -72,22 +72,31 @@ const Registration = ({ flow }: RegistrationProps) => {
 
   return (
     <div className="flex justify-center items-center h-screen dark:bg-gray-900">
-      <div className="w-full max-w-md">
-        <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800"
-          action={flow.ui.action}
-          method={flow.ui.method}
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800 w-full max-w-md"
+        action={flow.ui.action}
+        method={flow.ui.method}
+      >
+        <h1 className="mb-8 dark:text-white text-xl">Register</h1>
+
+        <h1 className="mb-4 text-sm dark:text-white">
+          {flow.ui.messages?.[0]?.text}
+        </h1>
+
+        {nodes.map((node, idx) => (
+          <div key={idx} className="mb-4">
+            {mapUINode(node, idx)}
+          </div>
+        ))}
+
+        <a
+          className="text-sm text-white hover:underline"
+          title="Anchor"
+          href="/login"
         >
-          <h1 className="mb-4 text-sm dark:text-white">
-            {flow.ui.messages?.[0]?.text}
-          </h1>
-          {nodes.map((node, idx) => (
-            <div key={idx} className="mb-4">
-              {mapUINode(node, idx)}
-            </div>
-          ))}
-        </form>
-      </div>
+          Already have an account? Login!
+        </a>
+      </form>
     </div>
   );
 };
