@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import styles from "@/styles/Home.module.css";
 import { Session } from "@ory/client";
 import { getUserName, ory } from "@/services/ory";
 
@@ -19,16 +18,14 @@ export default function Home({ session }: HomeProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.description}>
-          {session?.identity ? (
-            <p>Hello, {getUserName(session.identity)}</p>
-          ) : null}
-          <div>
-            <p className={styles.description}>
-              <a href="/logout">Log out</a>
-            </p>
-          </div>
+      <main>
+        {session?.identity ? (
+          <p>Hello, {getUserName(session.identity)}</p>
+        ) : null}
+        <div>
+          <p>
+            <a href="/logout">Log out</a>
+          </p>
         </div>
       </main>
     </>
