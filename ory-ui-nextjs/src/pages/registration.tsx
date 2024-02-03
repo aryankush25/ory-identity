@@ -11,6 +11,7 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui";
+import { handleGetFlowError } from "@/services/ory/error";
 
 interface RegistrationProps {
   flow: RegistrationFlow;
@@ -93,20 +94,20 @@ const Registration = ({ flow }: RegistrationProps) => {
 
 export const getServerSideProps: GetServerSideProps<RegistrationProps> =
   async ({ req, query }) => {
-    const flow = query?.flow as string | undefined;
-
-    if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePathBrowser, "registration");
-
-      return {
-        redirect: {
-          destination: initFlowUrl,
-          permanent: false,
-        },
-      };
-    }
-
     try {
+      const flow = query?.flow as string | undefined;
+
+      if (!isQuerySet(flow)) {
+        const initFlowUrl = getUrlForFlow(basePathBrowser, "registration");
+
+        return {
+          redirect: {
+            destination: initFlowUrl,
+            permanent: false,
+          },
+        };
+      }
+
       const regFlow = await ory.getRegistrationFlow({
         id: flow,
         cookie: req.headers.cookie,
@@ -118,11 +119,11 @@ export const getServerSideProps: GetServerSideProps<RegistrationProps> =
         },
       };
     } catch (error) {
-      console.log("#### error", error);
+      const errorData = handleGetFlowError("registration")(error);
 
       return {
         redirect: {
-          destination: "/registration",
+          destination: errorData ? errorData.redirectTo : "/error",
           permanent: false,
         },
       };
