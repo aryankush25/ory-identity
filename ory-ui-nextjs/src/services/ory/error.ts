@@ -85,6 +85,3 @@ export function handleGetFlowError(
     return Promise.reject(err);
   };
 }
-
-// A small function to help us deal with errors coming from initializing a flow.
-export const handleFlowError = handleGetFlowError;
