@@ -17,6 +17,7 @@ import {
   isUiNodeAnchorAttributes,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui";
+import { handleGetFlowError } from "@/services/ory/error";
 
 interface VerificationProps {
   flow: VerificationFlow;
@@ -119,20 +120,20 @@ const Verification = ({ flow }: VerificationProps) => {
 
 export const getServerSideProps: GetServerSideProps<VerificationProps> =
   async ({ req, query }) => {
-    const flow = query?.flow as string | undefined;
-
-    if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePathBrowser, "verification");
-
-      return {
-        redirect: {
-          destination: initFlowUrl,
-          permanent: false,
-        },
-      };
-    }
-
     try {
+      const flow = query?.flow as string | undefined;
+
+      if (!isQuerySet(flow)) {
+        const initFlowUrl = getUrlForFlow(basePathBrowser, "verification");
+
+        return {
+          redirect: {
+            destination: initFlowUrl,
+            permanent: false,
+          },
+        };
+      }
+
       const verificationFlow = await ory.getVerificationFlow({
         id: flow,
         cookie: req.headers.cookie,
@@ -144,11 +145,11 @@ export const getServerSideProps: GetServerSideProps<VerificationProps> =
         },
       };
     } catch (error) {
-      console.log("#### error", error);
+      const errorData = handleGetFlowError("verification")(error);
 
       return {
         redirect: {
-          destination: "/registration",
+          destination: errorData ? errorData.redirectTo : "/error",
           permanent: false,
         },
       };
