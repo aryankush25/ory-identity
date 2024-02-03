@@ -1,11 +1,13 @@
-import { AxiosError } from "axios";
-
 // A small function to help us deal with errors coming from fetching a flow.
 export function handleGetFlowError(
   flowType: "login" | "registration" | "settings" | "recovery" | "verification"
 ) {
-  return (err: AxiosError) => {
-    console.error("Error for " + flowType, err);
+  return (err: any) => {
+    console.error("Error for " + flowType + "flow:", err);
+
+    if (!err) {
+      return null;
+    }
 
     const errorData = (err.response?.data || {}) as any;
 
@@ -84,6 +86,6 @@ export function handleGetFlowError(
     }
 
     // We are not able to handle the error? Throw it.
-    throw err;
+    return null;
   };
 }
