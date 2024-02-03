@@ -22,10 +22,10 @@ export const removeTrailingSlash = (s: string) => s.replace(/\/$/, "");
 
 export const getUrlForFlow = (
   base: string,
-  flow: string,
+  flowType: "login" | "registration" | "settings" | "recovery" | "verification",
   query?: URLSearchParams
 ) =>
-  `${removeTrailingSlash(base)}/self-service/${flow}/browser${
+  `${removeTrailingSlash(base)}/self-service/${flowType}/browser${
     query ? `?${query.toString()}` : ""
   }`;
 
