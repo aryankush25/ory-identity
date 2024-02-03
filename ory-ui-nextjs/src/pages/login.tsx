@@ -11,6 +11,7 @@ import {
   filterNodesByGroups,
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui";
+import { handleGetFlowError } from "@/services/ory/error";
 
 interface LoginProps {
   flow: LoginFlow;
@@ -95,20 +96,20 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   req,
   query,
 }) => {
-  const flow = query?.flow as string | undefined;
-
-  if (!isQuerySet(flow)) {
-    const initFlowUrl = getUrlForFlow(basePathBrowser, "login");
-
-    return {
-      redirect: {
-        destination: initFlowUrl,
-        permanent: false,
-      },
-    };
-  }
-
   try {
+    const flow = query?.flow as string | undefined;
+
+    if (!isQuerySet(flow)) {
+      const initFlowUrl = getUrlForFlow(basePathBrowser, "login");
+
+      return {
+        redirect: {
+          destination: initFlowUrl,
+          permanent: false,
+        },
+      };
+    }
+
     const loginFlow = await ory.getLoginFlow({
       id: flow,
       cookie: req.headers.cookie,
@@ -120,11 +121,11 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
       },
     };
   } catch (error) {
-    console.log("#### error login", error);
+    const errorData = handleGetFlowError("login")(error);
 
     return {
       redirect: {
-        destination: "/login",
+        destination: errorData ? errorData.redirectTo : "/error",
         permanent: false,
       },
     };
