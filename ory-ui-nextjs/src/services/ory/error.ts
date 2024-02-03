@@ -4,7 +4,9 @@ import { AxiosError } from "axios";
 export function handleGetFlowError(
   flowType: "login" | "registration" | "settings" | "recovery" | "verification"
 ) {
-  return async (err: AxiosError) => {
+  return (err: AxiosError) => {
+    console.error("Error for " + flowType, err);
+
     const errorData = (err.response?.data || {}) as any;
 
     switch (errorData.error?.id) {
@@ -81,7 +83,7 @@ export function handleGetFlowError(
         };
     }
 
-    // We are not able to handle the error? Return it.
-    return Promise.reject(err);
+    // We are not able to handle the error? Throw it.
+    throw err;
   };
 }
