@@ -12,6 +12,7 @@ import {
   isUiNodeInputAttributes,
 } from "@ory/integrations/ui";
 import { handleGetFlowError } from "@/services/ory/error";
+import { customClsx } from "@/utils/helpers";
 
 interface LoginProps {
   flow: LoginFlow;
@@ -79,7 +80,12 @@ const Login = ({ flow }: LoginProps) => {
       >
         <h1 className="mb-8 dark:text-white text-xl">Login</h1>
 
-        <h1 className="mb-4 text-sm dark:text-white">
+        <h1
+          className={customClsx(
+            "mb-6 text-sm text-white",
+            flow.ui.messages?.[0]?.type === "error" && "text-red-500"
+          )}
+        >
           {flow.ui.messages?.[0]?.text}
         </h1>
 
