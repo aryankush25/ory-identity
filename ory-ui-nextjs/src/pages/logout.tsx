@@ -2,12 +2,12 @@ import { ory } from "@/services/ory";
 import { GetServerSideProps } from "next";
 
 export default function Logout() {
-  return <div>Okay</div>;
+  return <div>Logging you out..</div>;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   try {
-    const sessionResponse = await ory.toSession({
+    await ory.toSession({
       cookie: req.headers.cookie,
     });
 
@@ -26,7 +26,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
     return {
       redirect: {
-        destination: "/registration",
+        destination: "/login",
         permanent: false,
       },
     };
