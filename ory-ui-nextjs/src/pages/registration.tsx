@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { useCallback, useMemo } from "react";
+import { Fragment, useCallback, useMemo } from "react";
 import {
   basePathBrowser,
   getUrlForFlow,
@@ -41,21 +41,29 @@ const Registration = ({ flow }: RegistrationProps) => {
           );
         default:
           return (
-            <input
-              className="w-full px-3 py-2 mb-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:shadow-outline"
-              title="Input field"
-              placeholder={"Enter " + node.meta.label?.text}
-              name={attrs.name}
-              type={attrs.type}
-              autoComplete={
-                attrs.autocomplete || attrs.name === "identifier"
-                  ? "username"
-                  : ""
-              }
-              defaultValue={attrs.value}
-              required={attrs.required}
-              disabled={attrs.disabled}
-            />
+            <Fragment>
+              <input
+                className="w-full px-3 py-2 mb-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:shadow-outline"
+                title="Input field"
+                placeholder={"Enter " + node.meta.label?.text}
+                name={attrs.name}
+                type={attrs.type}
+                autoComplete={
+                  attrs.autocomplete || attrs.name === "identifier"
+                    ? "username"
+                    : ""
+                }
+                defaultValue={attrs.value}
+                required={attrs.required}
+                disabled={attrs.disabled}
+              />
+
+              {node.messages[0]?.text ? (
+                <p className="text-xs italic text-red-500 dark:text-red-400">
+                  {node.messages[0].text}
+                </p>
+              ) : null}
+            </Fragment>
           );
       }
     }
