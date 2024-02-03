@@ -5,15 +5,6 @@ export const basePathBrowser =
 export const basePath =
   process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL || "http://kratos:4433/";
 
-export const oryBrowser = new FrontendApi(
-  new Configuration({
-    basePath: basePathBrowser,
-    baseOptions: {
-      withCredentials: true,
-    },
-  })
-);
-
 export const ory = new FrontendApi(
   new Configuration({
     basePath,
