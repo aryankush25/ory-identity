@@ -1,7 +1,8 @@
-import "@/styles/globals.css";
+import { Fragment } from "react";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
-import { Fragment } from "react";
+
+import "@/styles/globals.css";
 
 const myFont = Inter({
   style: ["normal"],
