@@ -148,7 +148,9 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
 
     return {
       redirect: {
-        destination: errorData ? errorData.redirectTo : "/error",
+        destination: errorData
+          ? errorData.redirectTo
+          : "/error?flow=login&json=" + JSON.stringify(errorData),
         permanent: false,
       },
     };

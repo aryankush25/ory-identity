@@ -149,7 +149,9 @@ export const getServerSideProps: GetServerSideProps<VerificationProps> =
 
       return {
         redirect: {
-          destination: errorData ? errorData.redirectTo : "/error",
+          destination: errorData
+            ? errorData.redirectTo
+            : "/error?flow=verification&json=" + JSON.stringify(errorData),
           permanent: false,
         },
       };
