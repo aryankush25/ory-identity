@@ -9,6 +9,8 @@ import {
   ory,
 } from "@/services/ory";
 import { handleGetFlowError } from "@/services/ory/error";
+import { filterNodesByGroups } from "@ory/integrations/ui";
+import { useMemo } from "react";
 
 interface SettingsProps {
   flow: SettingsFlow;
@@ -51,15 +53,28 @@ const Settings: NextPage<SettingsProps> = ({ flow }) => {
   //         })
   //     );
 
+  const nodes = useMemo(
+    () =>
+      filterNodesByGroups({
+        nodes: flow.ui.nodes,
+        groups: ["default", "password"],
+      }),
+    [flow.ui.nodes]
+  );
+
+  console.log("#### nodes", nodes);
+
   return (
     <>
       <Head>
-        <title>
-          Profile Management and Security Settings - Ory NextJS Integration
-          Example
-        </title>
-        <meta name="description" content="NextJS + React + Vercel + Ory" />
+        <title>Profile Management and Security Settings</title>
+        <meta
+          name="description"
+          content="Profile Management and Security Settings"
+        />
       </Head>
+      <h1>Profile Management and Security Settings</h1>
+
       <div>
         <Link href="/" passHref>
           <div>Go back</div>
