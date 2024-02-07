@@ -1,8 +1,10 @@
 import { Fragment } from "react";
 import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
+import { IntlProvider, ThemeProvider } from "@ory/elements";
 
 import "@/styles/globals.css";
+import "@ory/elements/style.css";
 
 const myFont = Inter({
   style: ["normal"],
@@ -19,7 +21,11 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${myFont.style.fontFamily};
         }
       `}</style>
-      <Component {...pageProps} />
+      <ThemeProvider>
+        <IntlProvider>
+          <Component {...pageProps} />
+        </IntlProvider>
+      </ThemeProvider>
     </Fragment>
   );
 }
