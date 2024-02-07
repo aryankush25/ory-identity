@@ -1,7 +1,6 @@
-import { SettingsFlow, UpdateSettingsFlowBody } from "@ory/client";
+import { SettingsFlow, UiNode, UiNodeInputAttributes } from "@ory/client";
 import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 import {
   basePathBrowser,
   getUrlForFlow,
@@ -9,8 +8,11 @@ import {
   ory,
 } from "@/services/ory";
 import { handleGetFlowError } from "@/services/ory/error";
-import { filterNodesByGroups } from "@ory/integrations/ui";
-import { useMemo } from "react";
+import {
+  filterNodesByGroups,
+  isUiNodeInputAttributes,
+} from "@ory/integrations/ui";
+import { Fragment, useCallback, useMemo } from "react";
 
 interface SettingsProps {
   flow: SettingsFlow;
@@ -19,39 +21,54 @@ interface SettingsProps {
 const Settings: NextPage<SettingsProps> = ({ flow }) => {
   console.log("#### flow", flow);
 
-  // const onSubmit = (values: UpdateSettingsFlowBody) =>
-  //   router
-  //     // On submission, add the flow ID to the URL but do not navigate. This prevents the user loosing
-  //     // his data when she/he reloads the page.
-  //     .push(`/settings?flow=${flow?.id}`, undefined, { shallow: true })
-  //     .then(() =>
-  //       ory
-  //         .updateSettingsFlow({
-  //           flow: String(flow?.id),
-  //           updateSettingsFlowBody: values,
-  //         })
-  //         .then(({ data }) => {
-  //           // The settings have been saved and the flow was updated. Let's show it to the user!
-  //           setFlow(data);
+  const mapUINode = useCallback((node: UiNode, key: number) => {
+    if (isUiNodeInputAttributes(node.attributes)) {
+      const attrs = node.attributes as UiNodeInputAttributes;
+      const nodeType = attrs.type;
 
-  //           // continue_with is a list of actions that the user might need to take before the settings update is complete.
-  //           // It could, for example, contain a link to the verification form.
-  //           if (data.continue_with) {
-  //             for (const item of data.continue_with) {
-  //               switch (item.action) {
-  //                 case "show_verification_ui":
-  //                   router.push("/verification?flow=" + item.flow.id);
-  //                   return;
-  //               }
-  //             }
-  //           }
+      switch (nodeType) {
+        case "button":
+        case "submit":
+          return (
+            <button
+              className="w-full px-3 py-2 mb-2 text-sm font-bold text-white bg-blue-500 rounded shadow hover:bg-blue-700 focus:outline-none focus:shadow-outline dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:shadow-outline"
+              title="Submit"
+              type={attrs.type as "submit" | "reset" | "button" | undefined}
+              name={attrs.name}
+              value={attrs.value}
+            >
+              {node.meta.label?.text}
+            </button>
+          );
+        default:
+          return (
+            <Fragment>
+              <input
+                className="w-full px-3 py-2 mb-2 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:focus:shadow-outline"
+                title="Input field"
+                placeholder={"Enter " + node.meta.label?.text}
+                name={attrs.name}
+                type={attrs.type}
+                autoComplete={
+                  attrs.autocomplete || attrs.name === "identifier"
+                    ? "username"
+                    : ""
+                }
+                defaultValue={attrs.value}
+                required={attrs.required}
+                disabled={attrs.disabled}
+              />
 
-  //           if (data.return_to) {
-  //             window.location.href = data.return_to;
-  //             return;
-  //           }
-  //         })
-  //     );
+              {node.messages[0]?.text ? (
+                <p className="text-xs italic text-red-500 dark:text-red-400">
+                  {node.messages[0].text}
+                </p>
+              ) : null}
+            </Fragment>
+          );
+      }
+    }
+  }, []);
 
   const nodes = useMemo(
     () =>
@@ -65,7 +82,7 @@ const Settings: NextPage<SettingsProps> = ({ flow }) => {
   console.log("#### nodes", nodes);
 
   return (
-    <>
+    <div className="flex justify-center items-center flex-col h-screen dark:bg-gray-900">
       <Head>
         <title>Profile Management and Security Settings</title>
         <meta
@@ -73,14 +90,28 @@ const Settings: NextPage<SettingsProps> = ({ flow }) => {
           content="Profile Management and Security Settings"
         />
       </Head>
-      <h1>Profile Management and Security Settings</h1>
+      <h1 className="mb-8 dark:text-white text-xl">
+        Profile Management and Security Settings
+      </h1>
 
-      <div>
-        <Link href="/" passHref>
-          <div>Go back</div>
-        </Link>
-      </div>
-    </>
+      <form
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 dark:bg-gray-800 w-full max-w-md"
+        action={flow.ui.action}
+        method={flow.ui.method}
+      >
+        <h2 className="mb-8 dark:text-white text-xl">Change Password</h2>
+
+        <p className="mb-4 text-sm dark:text-white">
+          {flow.ui.messages?.[0]?.text}
+        </p>
+
+        {nodes.map((node, idx) => (
+          <div key={idx} className="mb-4">
+            {mapUINode(node, idx)}
+          </div>
+        ))}
+      </form>
+    </div>
   );
 };
 
