@@ -1,4 +1,5 @@
 import { ory } from "@/services/ory";
+import { handleError } from "@/services/ory/error";
 import { GetServerSideProps } from "next";
 
 export default function Logout() {
@@ -26,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 
     return {
       redirect: {
-        destination: "/login",
+        destination: handleError(error).redirectTo,
         permanent: false,
       },
     };
