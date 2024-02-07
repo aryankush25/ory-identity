@@ -15,7 +15,7 @@ interface VerificationProps {
 
 const Verification = ({ flow }: VerificationProps) => {
   return (
-    <div className="flex justify-center items-center h-screen dark:bg-gray-900">
+    <div className="flex justify-center items-center h-screen">
       <UserAuthCard
         flow={flow}
         flowType="verification"
