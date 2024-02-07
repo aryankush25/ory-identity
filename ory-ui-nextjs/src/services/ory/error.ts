@@ -89,3 +89,118 @@ export function handleGetFlowError(
     return null;
   };
 }
+
+export const handleError = (error: any): { redirectTo: string } => {
+  if (!error.response || error.response?.status === 0) {
+    return {
+      redirectTo: `/error?error=${encodeURIComponent(
+        JSON.stringify(error.response)
+      )}`,
+    };
+  }
+
+  const responseData = error.response?.data || ({} as any);
+
+  switch (error.response?.status) {
+    case 400: {
+      if (responseData.error?.id == "session_already_available") {
+        return {
+          redirectTo: "/",
+        };
+      }
+
+      break;
+    }
+    // we have no session or the session is invalid
+    case 401: {
+      console.warn("handleError hook 401: Navigate to /login");
+
+      return {
+        redirectTo: "/login",
+      };
+    }
+    case 403: {
+      // the user might have a session, but would require 2FA (Two-Factor Authentication)
+      if (responseData.error?.id === "session_aal2_required") {
+        return {
+          redirectTo: "/login?aal2=true",
+        };
+      }
+
+      if (
+        responseData.error?.id === "session_refresh_required" &&
+        responseData.redirect_browser_to
+      ) {
+        console.warn(
+          "sdkError 403: Redirect browser to",
+          responseData.redirect_browser_to
+        );
+
+        return {
+          redirectTo: responseData.redirect_browser_to,
+        };
+      }
+      break;
+    }
+    case 404: {
+      console.warn("sdkError 404: Navigate to Error");
+      const errorMsg = {
+        data: error.response?.data || error,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        url: window.location.href,
+      };
+
+      return {
+        redirectTo: `/error?error=${encodeURIComponent(
+          JSON.stringify(errorMsg)
+        )}`,
+      };
+    }
+    case 410: {
+      console.warn("sdkError 410: Navigate to /");
+
+      return {
+        redirectTo: "/",
+      };
+    }
+    // we need to parse the response and follow the `redirect_browser_to` URL
+    // this could be when the user needs to perform a 2FA challenge
+    // or passwordless login
+    case 422: {
+      if (responseData.redirect_browser_to !== undefined) {
+        const currentUrl = new URL(window.location.href);
+        const redirect = new URL(responseData.redirect_browser_to);
+
+        // host name has changed, then change location
+        if (currentUrl.host !== redirect.host) {
+          console.warn("sdkError 422: Host changed redirect");
+
+          return {
+            redirectTo: responseData.redirect_browser_to,
+          };
+        }
+
+        // Path has changed
+        if (currentUrl.pathname !== redirect.pathname) {
+          console.warn("sdkError 422: Update path");
+
+          return {
+            redirectTo: redirect.pathname + redirect.search,
+          };
+        }
+
+        // for webauthn we need to reload the flow
+        console.warn("sdkError 422: Redirect browser to");
+
+        return {
+          redirectTo: responseData.redirect_browser_to,
+        };
+      }
+    }
+  }
+
+  return {
+    redirectTo: "/error",
+  };
+};
