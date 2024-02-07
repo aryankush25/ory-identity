@@ -2,6 +2,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { Session } from "@ory/client";
 import { getUserName, ory } from "@/services/ory";
+import { handleError } from "@/services/ory/error";
 
 interface HomeProps {
   session: Session;
@@ -52,7 +53,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
 
     return {
       redirect: {
-        destination: "/registration",
+        destination: handleError(error).redirectTo,
         permanent: false,
       },
     };
