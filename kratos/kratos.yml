@@ -24,8 +24,8 @@ selfservice:
       config:
         issuer: Kratos
       enabled: true
-    lookup_secret:
-      enabled: true
+    # lookup_secret:
+    #   enabled: true
     link:
       enabled: true
     code:
