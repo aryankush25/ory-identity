@@ -6,7 +6,7 @@ import {
   isQuerySet,
   ory,
 } from "@/services/ory";
-import { handleGetFlowError } from "@/services/ory/error";
+import { handleError, handleGetFlowError } from "@/services/ory/error";
 import {
   NodeMessages,
   UserSettingsCard,
@@ -65,15 +65,6 @@ export const getServerSideProps: GetServerSideProps<SettingsProps> = async ({
 
     console.log("#### req.headers.cookie", req.headers.cookie);
 
-    if (!req.headers.cookie) {
-      return {
-        redirect: {
-          destination: "/login",
-          permanent: false,
-        },
-      };
-    }
-
     if (!isQuerySet(flow)) {
       const initFlowUrl = getUrlForFlow(basePathBrowser, "settings");
 
@@ -97,11 +88,14 @@ export const getServerSideProps: GetServerSideProps<SettingsProps> = async ({
     };
   } catch (error) {
     const errorData = handleGetFlowError("settings")(error);
+    const redirectTo = !errorData ? handleError(error).redirectTo : null;
 
     return {
       redirect: {
         destination: errorData
           ? errorData.redirectTo
+          : redirectTo
+          ? redirectTo
           : "/error?flow=settings&error=" +
             encodeURIComponent(JSON.stringify(error)),
         permanent: false,
