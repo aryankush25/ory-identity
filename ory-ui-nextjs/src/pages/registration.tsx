@@ -18,7 +18,6 @@ const Registration = ({ flow }: RegistrationProps) => {
     <div className="flex justify-center items-center h-screen">
       <UserAuthCard
         flow={flow}
-        title="Sign Up"
         flowType="registration"
         additionalProps={{
           loginURL: "/login",
