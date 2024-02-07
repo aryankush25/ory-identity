@@ -64,7 +64,8 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
       redirect: {
         destination: errorData
           ? errorData.redirectTo
-          : "/error?flow=login&json=" + JSON.stringify(errorData),
+          : "/error?flow=login&error=" +
+            encodeURIComponent(JSON.stringify(error)),
         permanent: false,
       },
     };

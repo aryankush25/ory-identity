@@ -60,7 +60,8 @@ export const getServerSideProps: GetServerSideProps<VerificationProps> =
         redirect: {
           destination: errorData
             ? errorData.redirectTo
-            : "/error?flow=verification&json=" + JSON.stringify(errorData),
+            : "/error?flow=verification&error=" +
+              encodeURIComponent(JSON.stringify(error)),
           permanent: false,
         },
       };

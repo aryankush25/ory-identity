@@ -63,7 +63,8 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
       redirect: {
         destination: errorData
           ? errorData.redirectTo
-          : "/error?flow=recovery&json=" + JSON.stringify(errorData),
+          : "/error?flow=recovery&error=" +
+            encodeURIComponent(JSON.stringify(error)),
         permanent: false,
       },
     };

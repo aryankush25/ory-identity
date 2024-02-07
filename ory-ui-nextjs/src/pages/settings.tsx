@@ -152,7 +152,8 @@ export const getServerSideProps: GetServerSideProps<SettingsProps> = async ({
       redirect: {
         destination: errorData
           ? errorData.redirectTo
-          : "/error?flow=settings&json=" + JSON.stringify(errorData),
+          : "/error?flow=settings&error=" +
+            encodeURIComponent(JSON.stringify(error)),
         permanent: false,
       },
     };

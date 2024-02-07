@@ -62,7 +62,8 @@ export const getServerSideProps: GetServerSideProps<RegistrationProps> =
         redirect: {
           destination: errorData
             ? errorData.redirectTo
-            : "/error?flow=registration&json=" + JSON.stringify(errorData),
+            : "/error?flow=registration&error=" +
+              encodeURIComponent(JSON.stringify(error)),
           permanent: false,
         },
       };
