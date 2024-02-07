@@ -11,7 +11,7 @@ interface ErrorProps {
 
 const Error: React.FC<ErrorProps> = ({ error }) => {
   return (
-    <div className="flex justify-center items-center h-screen flex-col">
+    <div className="flex justify-center items-center h-screen flex-col max-w-xl m-auto my-6 px-4">
       <Link href="/" className="pb-6 hover:text-blue-800 text-blue-400">
         Go to Home
       </Link>
