@@ -1,3 +1,7 @@
 
 Note:
     ☐ Get endpoint to get public key to verify token - http://localhost:4444/.well-known/jwks.json
+    ☐ OAuth2 authorization code flow - https://www.ory.sh/docs/oauth2-oidc/authorization-code-flow
+    ☐ Manage OAuth 2.0 and OpenID Connect clients - https://www.ory.sh/docs/hydra/guides/oauth2-clients
+    ☐ Ory Hydra API - https://www.ory.sh/docs/hydra/reference/api
+    ☐ Kratos selfservide UI Node - https://github.dev/ory/kratos-selfservice-ui-node
