@@ -1,0 +1,3 @@
+
+Note:
+    ☐ Get endpoint to get public key to verify token - http://localhost:4444/.well-known/jwks.json
