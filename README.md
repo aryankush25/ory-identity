@@ -38,3 +38,7 @@ Provide instructions on how to contribute to this project.
 ## License
 
 Include information about the license here.
+
+### Redirect URI EXAMPLE
+
+<http://127.0.0.1:4444/oauth2/auth?response_type=code&client_id=758a580d-54e4-4ca3-8b25-3c6b478e9e66&redirect_uri=https://codedash.in&state=1234571625371253716&prompt=registration>
