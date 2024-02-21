@@ -67,35 +67,35 @@ services:
       - "4437:4437"
     networks:
       - intranet
-  # ory-ui-nextjs:
-  #   build:
-  #     context: ./ory-ui-nextjs
-  #   volumes:
-  #     - ./ory-ui-nextjs:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   environment:
-  #     - NEXT_PUBLIC_KRATOS_BROWSER_URL=http://127.0.0.1:4433/
-  #     - NEXT_PUBLIC_KRATOS_PUBLIC_URL=http://kratos:4433/
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - intranet
-  #   restart: on-failure
-  kratos-selfservice-ui-node:
-    image: oryd/kratos-selfservice-ui-node:v0.13.0-21
+  ory-ui-nextjs:
+    build:
+      context: ./ory-ui-nextjs
+    volumes:
+      - ./ory-ui-nextjs:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NEXT_PUBLIC_KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+      - NEXT_PUBLIC_KRATOS_PUBLIC_URL=http://kratos:4433/
     ports:
       - "3000:3000"
-    environment:
-      - PORT=3000
-      - SECURITY_MODE=
-      - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
-      - KRATOS_PUBLIC_URL=http://kratos:4433/
-      - COOKIE_SECRET=PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
-      - CSRF_COOKIE_NAME=amit_damini
-      - CSRF_COOKIE_SECRET=PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
     networks:
       - intranet
     restart: on-failure
+  # kratos-selfservice-ui-node:
+  #   image: oryd/kratos-selfservice-ui-node:v0.13.0-21
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - PORT=3000
+  #     - SECURITY_MODE=
+  #     - KRATOS_BROWSER_URL=http://127.0.0.1:4433/
+  #     - KRATOS_PUBLIC_URL=http://kratos:4433/
+  #     - COOKIE_SECRET=PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+  #     - CSRF_COOKIE_NAME=amit_damini
+  #     - CSRF_COOKIE_SECRET=PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+  #   networks:
+  #     - intranet
+  #   restart: on-failure
 
 networks:
   intranet:
