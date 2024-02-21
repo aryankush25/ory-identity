@@ -9,19 +9,30 @@ import { LoginFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
 
+const flowType = "login";
+
 interface LoginProps {
   flow: LoginFlow;
+  forgotPasswordURL: string;
+  signupURL: string;
+  logoutURL: string;
 }
 
-const Login = ({ flow }: LoginProps) => {
+const Login = ({
+  flow,
+  forgotPasswordURL,
+  signupURL,
+  logoutURL,
+}: LoginProps) => {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <UserAuthCard
-        flowType="login"
+        flowType={flowType}
         flow={flow}
         additionalProps={{
-          forgotPasswordURL: "/recovery",
-          signupURL: "/registration",
+          forgotPasswordURL: forgotPasswordURL,
+          signupURL: signupURL,
+          logoutURL: logoutURL,
         }}
         includeScripts
       />
@@ -33,32 +44,124 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   req,
   query,
 }) => {
+  const {
+    flow,
+    aal = "",
+    refresh = "",
+    return_to = "",
+    organization = "",
+    via = "",
+    login_challenge,
+  } = query;
+
+  const initFlowQuery = new URLSearchParams({
+    aal: aal.toString(),
+    refresh: refresh.toString(),
+    return_to: return_to.toString(),
+    organization: organization.toString(),
+    via: via.toString(),
+  });
+
+  if (isQuerySet(login_challenge)) {
+    initFlowQuery.append("login_challenge", login_challenge);
+  }
+
+  // The flow is used to identify the settings and registration flow and
+  // return data like the csrf_token and so on.
+  if (!isQuerySet(flow)) {
+    const initFlowUrl = getUrlForFlow(basePathBrowser, flowType, initFlowQuery);
+
+    return {
+      redirect: {
+        destination: initFlowUrl,
+        permanent: false,
+      },
+    };
+  }
+
   try {
-    const flow = query?.flow as string | undefined;
+    const loginFlow = (
+      await ory.getLoginFlow({
+        id: flow,
+        cookie: req.headers.cookie,
+      })
+    ).data;
 
-    if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePathBrowser, "login");
+    if (loginFlow.ui.messages && loginFlow.ui.messages.length > 0) {
+      // the login requires that the user verifies their email address before logging in
+      if (loginFlow.ui.messages.some(({ id }) => id === 4000010)) {
+        // we will create a new verification flow and redirect the user to the verification page
+        const initVerificationUrl = getUrlForFlow(
+          basePathBrowser,
+          "verification",
+          new URLSearchParams({
+            return_to:
+              (return_to && return_to.toString()) || loginFlow.return_to || "",
+            message: JSON.stringify(loginFlow.ui.messages),
+          }),
+        );
 
-      return {
-        redirect: {
-          destination: initFlowUrl,
-          permanent: false,
-        },
-      };
+        return {
+          redirect: {
+            destination: initVerificationUrl,
+            permanent: false,
+          },
+        };
+      }
     }
 
-    const loginFlow = await ory.getLoginFlow({
-      id: flow,
-      cookie: req.headers.cookie,
+    const initRegistrationQuery = new URLSearchParams({
+      return_to:
+        (return_to && return_to.toString()) || loginFlow.return_to || "",
     });
+    if (loginFlow.oauth2_login_request?.challenge) {
+      initRegistrationQuery.set(
+        "login_challenge",
+        loginFlow.oauth2_login_request.challenge,
+      );
+    }
+    const initRegistrationUrl = getUrlForFlow(
+      basePathBrowser,
+      "registration",
+      initRegistrationQuery,
+    );
+
+    let initRecoveryUrl = "";
+    if (!loginFlow.refresh) {
+      initRecoveryUrl = getUrlForFlow(
+        basePathBrowser,
+        "recovery",
+        new URLSearchParams({
+          return_to:
+            (return_to && return_to.toString()) || loginFlow.return_to || "",
+        }),
+      );
+    }
+
+    // It is probably a bit strange to have a logout URL here, however this screen
+    // is also used for 2FA flows. If something goes wrong there, we probably want
+    // to give the user the option to sign out!
+    let logoutUrl: string | undefined = "";
+    if (loginFlow.requested_aal === "aal2" || loginFlow.refresh) {
+      logoutUrl =
+        "/logout" +
+        (return_to
+          ? new URLSearchParams({
+              return_to: return_to.toString() || loginFlow.return_to || "",
+            })
+          : "");
+    }
 
     return {
       props: {
-        flow: loginFlow.data,
+        flow: loginFlow,
+        forgotPasswordURL: initRecoveryUrl,
+        signupURL: initRegistrationUrl,
+        logoutURL: logoutUrl,
       },
     };
   } catch (error) {
-    const errorData = handleGetFlowError("login")(error);
+    const errorData = handleGetFlowError(flowType)(error);
 
     return {
       redirect: {
