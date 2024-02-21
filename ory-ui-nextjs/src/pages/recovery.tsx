@@ -9,20 +9,23 @@ import { RecoveryFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
 
+const flowType = "recovery";
+
 interface RecoveryProps {
   flow: RecoveryFlow;
+  loginURL: string;
 }
 
-const Recovery = ({ flow }: RecoveryProps) => {
+const Recovery = ({ flow, loginURL }: RecoveryProps) => {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <UserAuthCard
-        flowType={"recovery"}
+        flowType={flowType}
         flow={flow}
         additionalProps={{
-          loginURL: "/login",
+          loginURL: loginURL,
         }}
-        includeScripts={true}
+        includeScripts
       />
     </div>
   );
@@ -33,10 +36,14 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
   query,
 }) => {
   try {
-    const flow = query?.flow as string | undefined;
+    const { flow, return_to = "" } = query;
 
     if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePathBrowser, "recovery");
+      const initFlowUrl = getUrlForFlow(
+        basePathBrowser,
+        flowType,
+        new URLSearchParams({ return_to: return_to.toString() }),
+      );
 
       return {
         redirect: {
@@ -46,24 +53,36 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
       };
     }
 
-    const recoveryFlow = await ory.getRecoveryFlow({
-      id: flow,
-      cookie: req.headers.cookie,
-    });
+    const recoveryFlow = (
+      await ory.getRecoveryFlow({
+        id: flow,
+        cookie: req.headers.cookie,
+      })
+    ).data;
+
+    const initLoginUrl = getUrlForFlow(
+      basePathBrowser,
+      "login",
+      new URLSearchParams({
+        return_to:
+          (return_to && return_to.toString()) || recoveryFlow.return_to || "",
+      }),
+    );
 
     return {
       props: {
-        flow: recoveryFlow.data,
+        flow: recoveryFlow,
+        loginURL: initLoginUrl,
       },
     };
   } catch (error) {
-    const errorData = handleGetFlowError("recovery")(error);
+    const errorData = handleGetFlowError(flowType)(error);
 
     return {
       redirect: {
         destination: errorData
           ? errorData.redirectTo
-          : "/error?flow=recovery&error=" +
+          : `/error?flow=${flowType}&error=` +
             encodeURIComponent(JSON.stringify(error)),
         permanent: false,
       },
