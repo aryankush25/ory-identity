@@ -6,14 +6,15 @@ export default function Logout() {
   return <div>Logging you out..</div>;
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const { return_to } = query;
   try {
-    await ory.toSession({
-      cookie: req.headers.cookie,
-    });
-
     const logoutUrl = await ory.createBrowserLogoutFlow({
       cookie: req.headers.cookie,
+      returnTo: (return_to && return_to.toString()) || "",
     });
 
     return {
