@@ -81,6 +81,7 @@ services:
     networks:
       - intranet
     restart: on-failure
+  # TODO: Add envs here
   # kratos-selfservice-ui-node:
   #   image: oryd/kratos-selfservice-ui-node:v0.13.0-21
   #   ports:
