@@ -148,7 +148,6 @@ export const handleError = (error: any): { redirectTo: string } => {
         data: error.response?.data || error,
         status: error.response?.status,
         statusText: error.response?.statusText,
-        // url: window.location.href,
       };
 
       return {
