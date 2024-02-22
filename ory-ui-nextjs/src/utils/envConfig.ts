@@ -4,4 +4,17 @@ export const oryConfig = {
   apiBaseFrontendUrlInternal:
     process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL || "http://kratos:4433/",
   apiBaseOauth2UrlInternal: process.env.HYDRA_ADMIN_URL || "http://hydra:4445/",
+
+  oryAdminApiToken: process.env.ORY_ADMIN_API_TOKEN,
+  mockTlsTermination: process.env.MOCK_TLS_TERMINATION,
+  trustedClientIds: process.env.TRUSTED_CLIENT_IDS,
+  conformityFakeClaims: process.env.CONFORMITY_FAKE_CLAIMS,
+
+  csrfCookieSecret: process.env.CSRF_COOKIE_SECRET,
+  csrfCookieName: process.env.CSRF_COOKIE_NAME,
+
+  rememberConsentSessionForSeconds: process.env
+    .REMEMBER_CONSENT_SESSION_FOR_SECONDS
+    ? Number(process.env.REMEMBER_CONSENT_SESSION_FOR_SECONDS)
+    : 3600,
 };
