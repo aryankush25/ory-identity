@@ -16,10 +16,10 @@ export default async function handler(
     return;
   }
 
-  //   if (!isOAuthConsentRouteEnabled()) {
-  //     res.redirect("404");
-  //     return;
-  //   }
+  // if (!isOAuthConsentRouteEnabled()) {
+  //   res.redirect("404");
+  //   return;
+  // }
 
   const {
     consent_challenge: challenge,
@@ -81,11 +81,7 @@ export default async function handler(
       })
     ).data;
 
-    const redirectTo = String(acceptedConsent.redirect_to);
-
-    res.redirect(redirectTo);
-
-    return;
+    return res.redirect(String(acceptedConsent.redirect_to));
   }
 
   const rejectedConsent = (
