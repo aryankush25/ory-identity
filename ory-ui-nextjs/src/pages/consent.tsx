@@ -116,6 +116,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       props: {
         consent: consent,
         // csrfToken: req.csrfToken(true),
+        // TODO: Generate CSRF token
+        csrfToken: "req.csrfToken(true)",
         cardImage: consent.client?.logo_uri,
         client_name:
           consent.client?.client_name ||
@@ -123,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           "Unknown Client",
         requested_scope: consent.requested_scope || [],
         client: consent.client,
-        action: "consent",
+        action: "api/consent",
       },
     };
   } catch (error) {
