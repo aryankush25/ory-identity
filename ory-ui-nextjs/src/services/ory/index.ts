@@ -20,9 +20,6 @@ export const frontend = new FrontendApi(
 export const oauth2 = new OAuth2Api(
   new Configuration({
     basePath: oryConfig.apiBaseOauth2UrlInternal,
-    ...(oryConfig.oryAdminApiToken && {
-      accessToken: oryConfig.oryAdminApiToken,
-    }),
     ...(oryConfig.mockTlsTermination && {
       baseOptions: {
         "X-Forwarded-Proto": "https",
