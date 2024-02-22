@@ -5,6 +5,7 @@ import {
   oidcConformityMaybeFakeSession,
   ory,
 } from "@/services/ory";
+import { oryConfig } from "@/utils/envConfig";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -73,9 +74,7 @@ export default async function handler(
           remember: Boolean(remember),
 
           // When this "remember" sesion expires, in seconds. Set this to 0 so it will never expire.
-          remember_for: process.env.REMEMBER_CONSENT_SESSION_FOR_SECONDS
-            ? Number(process.env.REMEMBER_CONSENT_SESSION_FOR_SECONDS)
-            : 3600,
+          remember_for: oryConfig.rememberConsentSessionForSeconds,
         },
       })
     ).data;

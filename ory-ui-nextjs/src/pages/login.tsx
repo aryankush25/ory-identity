@@ -1,10 +1,5 @@
 import { GetServerSideProps } from "next";
-import {
-  basePathBrowser,
-  getUrlForFlow,
-  isQuerySet,
-  ory,
-} from "@/services/ory";
+import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
 import { LoginFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
@@ -69,7 +64,7 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
   // The flow is used to identify the settings and registration flow and
   // return data like the csrf_token and so on.
   if (!isQuerySet(flow)) {
-    const initFlowUrl = getUrlForFlow(basePathBrowser, flowType, initFlowQuery);
+    const initFlowUrl = getUrlForFlow(flowType, initFlowQuery);
 
     return {
       redirect: {
@@ -92,13 +87,12 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
       if (loginFlow.ui.messages.some(({ id }) => id === 4000010)) {
         // we will create a new verification flow and redirect the user to the verification page
         const initVerificationUrl = getUrlForFlow(
-          basePathBrowser,
           "verification",
           new URLSearchParams({
             return_to:
               (return_to && return_to.toString()) || loginFlow.return_to || "",
             message: JSON.stringify(loginFlow.ui.messages),
-          }),
+          })
         );
 
         return {
@@ -117,24 +111,22 @@ export const getServerSideProps: GetServerSideProps<LoginProps> = async ({
     if (loginFlow.oauth2_login_request?.challenge) {
       initRegistrationQuery.set(
         "login_challenge",
-        loginFlow.oauth2_login_request.challenge,
+        loginFlow.oauth2_login_request.challenge
       );
     }
     const initRegistrationUrl = getUrlForFlow(
-      basePathBrowser,
       "registration",
-      initRegistrationQuery,
+      initRegistrationQuery
     );
 
     let initRecoveryUrl = "";
     if (!loginFlow.refresh) {
       initRecoveryUrl = getUrlForFlow(
-        basePathBrowser,
         "recovery",
         new URLSearchParams({
           return_to:
             (return_to && return_to.toString()) || loginFlow.return_to || "",
-        }),
+        })
       );
     }
 

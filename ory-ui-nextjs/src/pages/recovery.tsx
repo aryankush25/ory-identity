@@ -1,10 +1,5 @@
 import { GetServerSideProps } from "next";
-import {
-  basePathBrowser,
-  getUrlForFlow,
-  isQuerySet,
-  ory,
-} from "@/services/ory";
+import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
 import { RecoveryFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
@@ -40,9 +35,8 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
 
     if (!isQuerySet(flow)) {
       const initFlowUrl = getUrlForFlow(
-        basePathBrowser,
         flowType,
-        new URLSearchParams({ return_to: return_to.toString() }),
+        new URLSearchParams({ return_to: return_to.toString() })
       );
 
       return {
@@ -61,12 +55,11 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
     ).data;
 
     const initLoginUrl = getUrlForFlow(
-      basePathBrowser,
       "login",
       new URLSearchParams({
         return_to:
           (return_to && return_to.toString()) || recoveryFlow.return_to || "",
-      }),
+      })
     );
 
     return {

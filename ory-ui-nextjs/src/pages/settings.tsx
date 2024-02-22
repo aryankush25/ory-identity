@@ -1,11 +1,6 @@
 import { SettingsFlow } from "@ory/client";
 import type { GetServerSideProps, NextPage } from "next";
-import {
-  basePathBrowser,
-  getUrlForFlow,
-  isQuerySet,
-  ory,
-} from "@/services/ory";
+import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
 import { handleError, handleGetFlowError } from "@/services/ory/error";
 import {
   NodeMessages,
@@ -66,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<SettingsProps> = async ({
     console.log("#### req.headers.cookie", req.headers.cookie);
 
     if (!isQuerySet(flow)) {
-      const initFlowUrl = getUrlForFlow(basePathBrowser, "settings");
+      const initFlowUrl = getUrlForFlow("settings");
 
       return {
         redirect: {

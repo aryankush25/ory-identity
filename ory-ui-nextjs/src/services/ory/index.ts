@@ -1,3 +1,4 @@
+import { oryConfig } from "@/utils/envConfig";
 import {
   AcceptOAuth2ConsentRequestSession,
   Configuration,
@@ -7,32 +8,22 @@ import {
   OAuth2ConsentRequest,
 } from "@ory/client";
 
-// TODO: Improve this file naming convention
-export const basePathBrowser =
-  process.env.NEXT_PUBLIC_KRATOS_BROWSER_URL || "http://127.0.0.1:4433/";
-export const basePath =
-  process.env.NEXT_PUBLIC_KRATOS_PUBLIC_URL || "http://kratos:4433/";
-export const apiBaseOauth2UrlInternal =
-  process.env.HYDRA_ADMIN_URL || "http://hydra:4445/";
-
 export const ory = new FrontendApi(
   new Configuration({
-    basePath,
+    basePath: oryConfig.apiBaseFrontendUrlInternal,
     baseOptions: {
       withCredentials: true,
     },
   })
 );
 
-console.log("#### apiBaseOauth2UrlInternal", apiBaseOauth2UrlInternal);
-
 export const oauth2 = new OAuth2Api(
   new Configuration({
-    basePath: apiBaseOauth2UrlInternal,
-    ...(process.env.ORY_ADMIN_API_TOKEN && {
-      accessToken: process.env.ORY_ADMIN_API_TOKEN,
+    basePath: oryConfig.apiBaseOauth2UrlInternal,
+    ...(oryConfig.oryAdminApiToken && {
+      accessToken: oryConfig.oryAdminApiToken,
     }),
-    ...(process.env.MOCK_TLS_TERMINATION && {
+    ...(oryConfig.mockTlsTermination && {
       baseOptions: {
         "X-Forwarded-Proto": "https",
       },
@@ -47,29 +38,28 @@ export const getUserName = (identity: Identity) =>
 export const removeTrailingSlash = (s: string) => s.replace(/\/$/, "");
 
 export const getUrlForFlow = (
-  base: string,
   flowType: "login" | "registration" | "settings" | "recovery" | "verification",
   query?: URLSearchParams
 ) =>
-  `${removeTrailingSlash(base)}/self-service/${flowType}/browser${
-    query ? `?${query.toString()}` : ""
-  }`;
+  `${removeTrailingSlash(
+    oryConfig.kratosBrowserUrl
+  )}/self-service/${flowType}/browser${query ? `?${query.toString()}` : ""}`;
 
 export const isQuerySet = (x: any): x is string =>
   typeof x === "string" && x.length > 0;
 
 export const isOAuthConsentRouteEnabled = () =>
-  apiBaseOauth2UrlInternal &&
-  process.env.CSRF_COOKIE_SECRET &&
-  process.env.CSRF_COOKIE_NAME
+  oryConfig.apiBaseOauth2UrlInternal &&
+  oryConfig.csrfCookieSecret &&
+  oryConfig.csrfCookieName
     ? true
     : false;
 
 export const shouldSkipConsent = (challenge: OAuth2ConsentRequest) => {
   let trustedClients: string[] = [];
 
-  if (process.env.TRUSTED_CLIENT_IDS) {
-    trustedClients = String(process.env.TRUSTED_CLIENT_IDS).split(",");
+  if (oryConfig.trustedClientIds) {
+    trustedClients = String(oryConfig.trustedClientIds).split(",");
   }
 
   return challenge.skip ||
@@ -136,7 +126,7 @@ export const oidcConformityMaybeFakeSession = (
   grantScope: string[],
   session: AcceptOAuth2ConsentRequestSession
 ): AcceptOAuth2ConsentRequestSession => {
-  if (process.env.CONFORMITY_FAKE_CLAIMS !== "1") {
+  if (oryConfig.conformityFakeClaims !== "1") {
     return session;
   }
 
