@@ -16,10 +16,9 @@ export default async function handler(
     return;
   }
 
-  // if (!isOAuthConsentRouteEnabled()) {
-  //   res.redirect("404");
-  //   return;
-  // }
+  //   if (!isOAuthConsentRouteEnabled()) {
+  //     return res.redirect("404");
+  //   }
 
   const {
     consent_challenge: challenge,
