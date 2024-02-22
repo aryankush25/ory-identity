@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { Session } from "@ory/client";
-import { getUserName, ory } from "@/services/ory";
+import { getUserName, frontend } from "@/services/ory";
 import { handleError } from "@/services/ory/error";
 import { CodeBox, gridStyle } from "@ory/elements";
 import { customClsx } from "@/utils/helpers";
@@ -51,7 +51,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async ({
   req,
 }) => {
   try {
-    const sessionResponse = await ory.toSession({
+    const sessionResponse = await frontend.toSession({
       cookie: req.headers.cookie,
     });
 

@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
+import { getUrlForFlow, isQuerySet, frontend } from "@/services/ory";
 import { RegistrationFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<RegistrationProps> =
 
     try {
       const registrationFlow = (
-        await ory.getRegistrationFlow({
+        await frontend.getRegistrationFlow({
           id: flow,
           cookie: req.headers.cookie,
         })

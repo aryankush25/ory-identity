@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
+import { getUrlForFlow, isQuerySet, frontend } from "@/services/ory";
 import { RecoveryFlow } from "@ory/client";
 import { handleGetFlowError } from "@/services/ory/error";
 import { UserAuthCard } from "@ory/elements";
@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps<RecoveryProps> = async ({
     }
 
     const recoveryFlow = (
-      await ory.getRecoveryFlow({
+      await frontend.getRecoveryFlow({
         id: flow,
         cookie: req.headers.cookie,
       })

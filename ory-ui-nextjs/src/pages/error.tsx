@@ -1,4 +1,4 @@
-import { ory } from "@/services/ory";
+import { frontend } from "@/services/ory";
 import { handleError } from "@/services/ory/error";
 import { CodeBox } from "@ory/elements";
 import { GetServerSideProps } from "next";
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<ErrorProps> = async ({
 
     if (id) {
       // Fetch the error information from the Ory API
-      const { data } = await ory.getFlowError({ id: String(id) });
+      const { data } = await frontend.getFlowError({ id: String(id) });
 
       error = JSON.stringify(data, null, 2);
     }

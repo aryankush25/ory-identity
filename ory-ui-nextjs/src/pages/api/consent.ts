@@ -3,7 +3,7 @@ import {
   //   isOAuthConsentRouteEnabled,
   oauth2,
   oidcConformityMaybeFakeSession,
-  ory,
+  frontend,
 } from "@/services/ory";
 import { oryConfig } from "@/utils/envConfig";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -34,7 +34,7 @@ export default async function handler(
   }
 
   const sessionResponse = (
-    await ory.toSession({
+    await frontend.toSession({
       cookie: req.headers.cookie,
     })
   ).data;

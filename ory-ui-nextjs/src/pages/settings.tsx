@@ -1,6 +1,6 @@
 import { SettingsFlow } from "@ory/client";
 import type { GetServerSideProps, NextPage } from "next";
-import { getUrlForFlow, isQuerySet, ory } from "@/services/ory";
+import { getUrlForFlow, isQuerySet, frontend } from "@/services/ory";
 import { handleError, handleGetFlowError } from "@/services/ory/error";
 import {
   NodeMessages,
@@ -71,7 +71,7 @@ export const getServerSideProps: GetServerSideProps<SettingsProps> = async ({
       };
     }
 
-    const settingsFlow = await ory.getSettingsFlow({
+    const settingsFlow = await frontend.getSettingsFlow({
       id: flow,
       cookie: req.headers.cookie,
     });

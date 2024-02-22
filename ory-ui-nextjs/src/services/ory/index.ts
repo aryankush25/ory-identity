@@ -8,7 +8,7 @@ import {
   OAuth2ConsentRequest,
 } from "@ory/client";
 
-export const ory = new FrontendApi(
+export const frontend = new FrontendApi(
   new Configuration({
     basePath: oryConfig.apiBaseFrontendUrlInternal,
     baseOptions: {

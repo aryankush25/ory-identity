@@ -2,7 +2,7 @@ import {
   extractSession,
   // isOAuthConsentRouteEnabled,
   oauth2,
-  ory,
+  frontend,
   shouldSkipConsent,
 } from "@/services/ory";
 import { handleError } from "@/services/ory/error";
@@ -70,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       let grantScope = consent.requested_scope || [];
 
       const sessionResponse = (
-        await ory.toSession({
+        await frontend.toSession({
           cookie: req.headers.cookie,
         })
       ).data;
