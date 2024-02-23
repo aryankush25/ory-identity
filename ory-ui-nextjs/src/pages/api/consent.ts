@@ -33,6 +33,7 @@ export default async function handler(
     grantScope = [grantScope];
   }
 
+  // TODO: 403 on toSession means that we need to request 2FA
   const sessionResponse = (
     await frontend.toSession({
       cookie: req.headers.cookie,
