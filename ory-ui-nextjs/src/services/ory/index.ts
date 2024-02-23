@@ -45,6 +45,7 @@ export const getUrlForFlow = (
 export const isQuerySet = (x: any): x is string =>
   typeof x === "string" && x.length > 0;
 
+// TODO: Check what is the use of this function
 export const isOAuthConsentRouteEnabled = () =>
   oryConfig.apiBaseOauth2UrlInternal &&
   oryConfig.csrfCookieSecret &&

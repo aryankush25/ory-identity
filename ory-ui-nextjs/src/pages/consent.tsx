@@ -105,6 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     }
 
+    // TODO: Verify it by Varun bhaiya
     const csrfToken = generateCsrfToken();
 
     return {
