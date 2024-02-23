@@ -8,6 +8,7 @@ import {
 import { handleError } from "@/services/ory/error";
 import { GetServerSideProps } from "next";
 import { UserConsentCard, UserConsentCardProps } from "@ory/elements";
+import { generateCsrfToken } from "@/utils/helpers";
 
 export default function Consent({
   consent,
@@ -104,20 +105,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     }
 
-    // if (!req.csrfToken) {
-    //   throw new Error(
-    //     "Expected CSRF token middleware to be set but received none."
-    //   );
-    // }
-
-    console.log("#### consent", consent);
+    const csrfToken = generateCsrfToken();
 
     return {
       props: {
         consent: consent,
-        // csrfToken: req.csrfToken(true),
-        // TODO: Generate CSRF token
-        csrfToken: "req.csrfToken(true)",
+        csrfToken: csrfToken,
         cardImage: consent.client?.logo_uri,
         client_name:
           consent.client?.client_name ||
