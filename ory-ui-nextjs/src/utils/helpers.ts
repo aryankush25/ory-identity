@@ -31,3 +31,12 @@ export function customClsx(...args: ClsxArg[]): string {
 
   return classes.join(" "); // Join all class names with spaces
 }
+
+export function generateCsrfToken(): string {
+  // Generate a random CSRF token
+  const token =
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15);
+
+  return token;
+}
