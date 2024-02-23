@@ -10,7 +10,7 @@ export const oryConfig = {
   conformityFakeClaims: process.env.CONFORMITY_FAKE_CLAIMS,
 
   csrfCookieSecret: process.env.CSRF_COOKIE_SECRET,
-  csrfCookieName: process.env.CSRF_COOKIE_NAME,
+  csrfCookieName: process.env.CSRF_COOKIE_NAME || "__Host-ax-x-csrf-token",
 
   rememberConsentSessionForSeconds: process.env
     .REMEMBER_CONSENT_SESSION_FOR_SECONDS
