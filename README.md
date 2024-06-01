@@ -52,6 +52,7 @@ This project includes configurations and code for setting up and running ORY Hyd
    ```
 
 4. **Start the Next.js application**:
+
    ```bash
    npm run dev
    ```
@@ -70,6 +71,7 @@ This project includes configurations and code for setting up and running ORY Hyd
    - **MailSlurper**: [http://127.0.0.1:4436](http://127.0.0.1:4436)
 
 3. **Redirect URI Example**:
+
    ```text
    http://127.0.0.1:4444/oauth2/auth?response_type=code&client_id=758a580d-54e4-4ca3-8b25-3c6b478e9e66&redirect_uri=https://codedash.in&state=1234571625371253716&prompt=registration
    ```
@@ -109,8 +111,6 @@ To rebuild the services after making changes, run:
 docker-compose up --build
 ```
 
-```
-
 ## Contributing
 
 Contributions are welcome! Please submit a pull request or open an issue to discuss any changes.
@@ -118,4 +118,3 @@ Contributions are welcome! Please submit a pull request or open an issue to disc
 ## License
 
 This project is licensed under the MIT License.
-```
